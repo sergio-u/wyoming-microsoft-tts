@@ -64,10 +64,16 @@ class MicrosoftTTS:
         """Synthesize text to speech and return a stream."""
 
         _LOGGER.debug(f"Requested TTS for [{text}]")
+        _LOGGER.debug(f"Requested TTS for [{text}]")
         if voice is None:
             voice = self.args.voice
+        else:
+            _LOGGER.debug(f"Using voice [{voice}]")
+
         if language is None:
             language = self.arg.language
+        else:
+            _LOGGER.debug(f"Using language [{language}]")
 
         ssml = self.generate_ssml(
             voice,
