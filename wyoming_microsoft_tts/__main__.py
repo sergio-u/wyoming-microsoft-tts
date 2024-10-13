@@ -86,7 +86,7 @@ async def main() -> None:
                     "code",
                     voice_info.get("espeak", {}).get("voice", voice_name.split("_")[0]),
                 ),
-                voice_info.get("secondary_languages", []),
+                *voice_info.get("secondary_languages", []),
             ],
         )
         for voice_name, voice_info in voices_info.items()
