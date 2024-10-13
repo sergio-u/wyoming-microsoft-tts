@@ -5,6 +5,7 @@ import logging
 import math
 import os
 import wave
+import json
 
 from wyoming.audio import AudioChunk, AudioStart, AudioStop
 from wyoming.event import Event
@@ -47,6 +48,7 @@ class MicrosoftEventHandler(AsyncEventHandler):
 
         synthesize = Synthesize.from_event(event)
         _LOGGER.debug(synthesize)
+        _LOGGER.debug(json.dumps(event.data))
 
         raw_text = synthesize.text
 

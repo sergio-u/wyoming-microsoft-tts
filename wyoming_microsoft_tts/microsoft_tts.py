@@ -71,7 +71,7 @@ class MicrosoftTTS:
             _LOGGER.debug(f"Using voice [{voice}]")
 
         if language is None:
-            language = self.arg.language
+            language = self.args.language
         else:
             _LOGGER.debug(f"Using language [{language}]")
 
