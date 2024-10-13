@@ -64,7 +64,7 @@ def transform_voices_files(response):
 def get_voices(
     download_dir: Union[str, Path],
     update_voices: bool = False,
-    region: str = "westus",
+    region: str = "eastus",
     key: str = "",
 ) -> dict[str, Any]:
     """Load available voices from downloaded or embedded JSON file."""

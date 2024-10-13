@@ -1,6 +1,7 @@
-wyoming==1.5.4
-azure-cognitiveservices-speech==1.40.0
+wyoming>=1.6.0,<1.7.0
+azure-cognitiveservices-speech>=1.41.1,<1.42
 black>=24,<25
 lxml>=5,<6
-pycountry>=23.12.11
-ruff
+pycountry>=24.6.1,<25
+ruff>=0.6.9,<0.7
+pyaudio

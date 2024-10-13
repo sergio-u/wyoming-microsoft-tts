@@ -34,24 +34,9 @@ async def main() -> None:
         help="Default Microsoft voice to use (e.g., en-GB-SoniaNeural)",
     )
     parser.add_argument(
-        "--download-dir",
-        default="/tmp/",
-        type=str,
-        help="Directory to download voices.json into (default: /tmp/)",
-    )
-    parser.add_argument(
         "--uri", default="tcp://0.0.0.0:10200", help="unix:// or tcp://"
     )
-    #
-    parser.add_argument(
-        "--speaker", type=str, help="Name or id of speaker for default voice"
-    )
-    #
-    parser.add_argument(
-        "--auto-punctuation", default=".?!", help="Automatically add punctuation"
-    )
     parser.add_argument("--samples-per-chunk", type=int, default=1024)
-    #
     parser.add_argument(
         "--update-voices",
         action="store_true",
@@ -59,6 +44,8 @@ async def main() -> None:
     )
     #
     parser.add_argument("--debug", action="store_true", help="Log DEBUG messages")
+    parser.add_argument("--language", type=str, help="Language code")
+    parser.add_argument("--rate", type=float, help="Speech rate percentage")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.DEBUG if args.debug else logging.INFO)
@@ -84,7 +71,7 @@ async def main() -> None:
             description=get_description(voice_info),
             attribution=Attribution(
                 name="Microsoft",
-                url="https://github.com/hugobloem/wyoming-microsoft-tts",
+                url="https://github.com/sergio-u/wyoming-microsoft-tts",
             ),
             installed=True,
             version=__version__,
@@ -94,14 +81,6 @@ async def main() -> None:
                     voice_info.get("espeak", {}).get("voice", voice_name.split("_")[0]),
                 )
             ],
-            #
-            # Don't send speakers for now because it overflows StreamReader buffers
-            # speakers=[
-            #     TtsVoiceSpeaker(name=speaker_name)
-            #     for speaker_name in voice_info["speaker_id_map"]
-            # ]
-            # if voice_info.get("speaker_id_map")
-            # else None,
         )
         for voice_name, voice_info in voices_info.items()
         if not voice_info.get("_is_alias", False)
@@ -110,11 +89,11 @@ async def main() -> None:
     wyoming_info = Info(
         tts=[
             TtsProgram(
-                name="microsoft",
+                name="microsoft-tts-stream",
                 description="A fast, local, neural text to speech engine",
                 attribution=Attribution(
                     name="Microsoft",
-                    url="https://github.com/hugobloem/wyoming-microsoft-tts",
+                    url="https://github.com/sergio-u/wyoming-microsoft-tts",
                 ),
                 installed=True,
                 version=__version__,

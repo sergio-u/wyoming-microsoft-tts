@@ -1,4 +1,5 @@
 """Event handler for clients of the server."""
+
 import argparse
 import logging
 import math
@@ -52,57 +53,35 @@ class MicrosoftEventHandler(AsyncEventHandler):
         # Join multiple lines
         text = " ".join(raw_text.strip().splitlines())
 
-        if self.cli_args.auto_punctuation and text:
-            # Add automatic punctuation (important for some voices)
-            has_punctuation = False
-            for punc_char in self.cli_args.auto_punctuation:
-                if text[-1] == punc_char:
-                    has_punctuation = True
-                    break
-
-            if not has_punctuation:
-                text = text + self.cli_args.auto_punctuation[0]
-
-        output_path = self.microsoft_tts.synthesize(
-            text=synthesize.text, voice=synthesize.voice.name
+        # Use the new streaming synthesis method
+        audio_stream = self.microsoft_tts.synthesize_stream_ssml(
+            text=text, voice=synthesize.voice.name
         )
 
-        wav_file: wave.Wave_read = wave.open(output_path, "rb")
-        with wav_file:
-            rate = wav_file.getframerate()
-            width = wav_file.getsampwidth()
-            channels = wav_file.getnchannels()
+        # Assume 16-bit PCM audio, mono
+        rate = 16000  # You may need to adjust this based on the actual output
+        width = 2
+        channels = 1
 
+        await self.write_event(
+            AudioStart(
+                rate=rate,
+                width=width,
+                channels=channels,
+            ).event(),
+        )
+
+        for audio_chunk in audio_stream:
             await self.write_event(
-                AudioStart(
+                AudioChunk(
+                    audio=audio_chunk,
                     rate=rate,
                     width=width,
                     channels=channels,
                 ).event(),
             )
 
-            # Audio
-            audio_bytes = wav_file.readframes(wav_file.getnframes())
-            bytes_per_sample = width * channels
-            bytes_per_chunk = bytes_per_sample * self.cli_args.samples_per_chunk
-            num_chunks = int(math.ceil(len(audio_bytes) / bytes_per_chunk))
-
-            # Split into chunks
-            for i in range(num_chunks):
-                offset = i * bytes_per_chunk
-                chunk = audio_bytes[offset : offset + bytes_per_chunk]
-                await self.write_event(
-                    AudioChunk(
-                        audio=chunk,
-                        rate=rate,
-                        width=width,
-                        channels=channels,
-                    ).event(),
-                )
-
         await self.write_event(AudioStop().event())
         _LOGGER.debug("Completed request")
-
-        os.unlink(output_path)
 
         return True

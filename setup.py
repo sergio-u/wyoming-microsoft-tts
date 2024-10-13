@@ -19,11 +19,11 @@ data_files = [module_dir / "voices.json"]
 # -----------------------------------------------------------------------------
 
 setup(
-    name="wyoming_microsoft_tts",
+    name="wyoming_microsoft_tts_stream",
     version="1.0.8",
     description="Wyoming Server for Microsoft TTS",
-    url="https://github.com/hugobloem/wyoming-microsoft-tts",
-    author="Hugo Bloem",
+    url="https://github.com/sergio-u/wyoming-microsoft-tts",
+    author="Sergio Ugalde",
     author_email="",
     license="MIT",
     packages=setuptools.find_packages(),

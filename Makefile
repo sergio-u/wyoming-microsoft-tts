@@ -1,7 +1,7 @@
 .PHONY: local run update
 
 VERSION := 1.0.0
-TAG := hugobloem/wyoming-microsoft-tts
+TAG := sergio-u/wyoming-microsoft-tts-stream
 PLATFORMS := linux/amd64,linux/arm64,linux/arm/v7
 VOICE := en_GB-SoniaNeural
 HOST := 0.0.0.0
