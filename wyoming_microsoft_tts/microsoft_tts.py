@@ -58,40 +58,6 @@ class MicrosoftTTS:
             prosody_end=prosody_end,
         )
 
-    def synthesize_stream(self, text, voice=None, samples_per_chunk=None):
-        """Synthesize text to speech and return a stream."""
-        _LOGGER.debug(f"Requested TTS for [{text}]")
-        if voice is None:
-            voice = self.args.voice
-
-        if samples_per_chunk is None:
-            samples_per_chunk = self.args.samples_per_chunk
-
-        self.speech_config.speech_synthesis_voice_name = voice
-        self.speech_config.speech_synthesis_language = "es-MX"
-
-        # Use PullAudioOutputStream to get the audio data as a stream
-        pull_stream = speechsdk.audio.PullAudioOutputStream()
-        audio_config = speechsdk.audio.AudioOutputConfig(stream=pull_stream)
-
-        speech_synthesizer = speechsdk.SpeechSynthesizer(
-            speech_config=self.speech_config, audio_config=audio_config
-        )
-
-        speech_synthesis_result = speech_synthesizer.start_speaking_text_async(text)
-
-        # Wait for the operation to complete
-        result = speech_synthesis_result.get()
-
-        # Access the in-memory audio data
-        buffer = (ctypes.c_ubyte * samples_per_chunk)()
-
-        while True:
-            audio_chunk = pull_stream.read(buffer)
-            if not audio_chunk:
-                break
-            yield bytes(buffer[:audio_chunk])
-
     def synthesize_stream_ssml(self, text, voice=None, samples_per_chunk=None):
         """Synthesize text to speech and return a stream."""
         ssml = self.generate_ssml(

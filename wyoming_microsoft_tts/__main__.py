@@ -42,6 +42,12 @@ async def main() -> None:
         action="store_true",
         help="Download latest voices.json during startup",
     )
+    parser.add_argument(
+        "--download-dir",
+        default="/tmp/",
+        type=str,
+        help="Directory to download voices.json into (default: /tmp/)",
+    )
     #
     parser.add_argument("--debug", action="store_true", help="Log DEBUG messages")
     parser.add_argument("--language", type=str, help="Language code")
@@ -79,7 +85,8 @@ async def main() -> None:
                 voice_info.get("language", {}).get(
                     "code",
                     voice_info.get("espeak", {}).get("voice", voice_name.split("_")[0]),
-                )
+                ),
+                voice_info.get("secondary_languages", []),
             ],
         )
         for voice_name, voice_info in voices_info.items()

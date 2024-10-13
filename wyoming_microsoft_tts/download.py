@@ -50,6 +50,7 @@ def transform_voices_files(response):
                     "name_english": entry["LocaleName"],
                     "country_english": country.name,
                 },
+                "secondary_languages": entry.get("SecondaryLocaleList", []),
                 "quality": entry["VoiceType"],
                 "num_speakers": 1,
                 "speaker_id_map": {},
