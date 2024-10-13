@@ -74,6 +74,7 @@ class MicrosoftEventHandler(AsyncEventHandler):
         )
 
         for audio_chunk in audio_stream:
+            _LOGGER.debug(f"Received chunk: {len(audio_chunk)} bytes")
             await self.write_event(
                 AudioChunk(
                     audio=audio_chunk,

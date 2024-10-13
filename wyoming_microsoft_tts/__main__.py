@@ -48,9 +48,9 @@ async def main() -> None:
         type=str,
         help="Directory to download voices.json into (default: /tmp/)",
     )
+    parser.add_argument("--language", type=str, default="en-US", help="Language code")
     #
     parser.add_argument("--debug", action="store_true", help="Log DEBUG messages")
-    parser.add_argument("--language", type=str, help="Language code")
     parser.add_argument("--rate", type=float, help="Speech rate percentage")
     args = parser.parse_args()
 

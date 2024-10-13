@@ -33,11 +33,6 @@ class MicrosoftTTS:
             subscription=args.subscription_key, region=args.service_region
         )
 
-        # output_dir = str(tempfile.TemporaryDirectory())
-        # output_dir = Path(output_dir)
-        # output_dir.mkdir(parents=True, exist_ok=True)
-        # self.output_dir = output_dir
-
     # Function to generate SSML string with optional prosody
     def generate_ssml(
         self, voice_name, lang, inner_lang, text, rate=None, pitch=None, contour=None
@@ -64,7 +59,6 @@ class MicrosoftTTS:
         """Synthesize text to speech and return a stream."""
 
         _LOGGER.debug(f"Requested TTS for [{text}]")
-        _LOGGER.debug(f"Requested TTS for [{text}]")
         if voice is None:
             voice = self.args.voice
         else:
@@ -82,6 +76,7 @@ class MicrosoftTTS:
             text=text,
             rate=self.args.rate,
         )
+        _LOGGER.debug(f"SSML: {ssml}")
 
         if samples_per_chunk is None:
             samples_per_chunk = self.args.samples_per_chunk
@@ -105,6 +100,7 @@ class MicrosoftTTS:
         buffer = (ctypes.c_ubyte * samples_per_chunk)()
 
         while True:
+            _LOGGER.debug("Reading chunk")
             audio_chunk = pull_stream.read(buffer)
             if not audio_chunk:
                 _LOGGER.debug("Ended transcription")
