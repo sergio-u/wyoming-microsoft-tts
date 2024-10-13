@@ -58,19 +58,24 @@ class MicrosoftTTS:
             prosody_end=prosody_end,
         )
 
-    def synthesize_stream_ssml(self, text, voice=None, samples_per_chunk=None):
+    def synthesize_stream_ssml(
+        self, text, voice=None, language=None, samples_per_chunk=None
+    ):
         """Synthesize text to speech and return a stream."""
-        ssml = self.generate_ssml(
-            voice,
-            lang=self.args.language,
-            inner_lang=self.args.language,
-            text=text,
-            rate=self.args.rate,
-        )
 
         _LOGGER.debug(f"Requested TTS for [{text}]")
         if voice is None:
             voice = self.args.voice
+        if language is None:
+            language = self.arg.language
+
+        ssml = self.generate_ssml(
+            voice,
+            lang=language,
+            inner_lang=language,
+            text=text,
+            rate=self.args.rate,
+        )
 
         if samples_per_chunk is None:
             samples_per_chunk = self.args.samples_per_chunk
